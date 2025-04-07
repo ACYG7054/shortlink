@@ -1,12 +1,16 @@
 package org.example.controller;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.convention.result.Result;
 import org.example.common.convention.result.Results;
+import org.example.dto.resp.UserActualRespDTO;
 import org.example.dto.resp.UserRespDTO;
 import org.example.service.UserService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,4 +40,14 @@ public class UserController {
         return Results.success(userService.getUserByUsername(username));
     }
 
+    /**
+     * 根据用户名查询无脱敏信息
+     * @param username
+     * @return
+     */
+    @GetMapping("/api/short-link/admin/v1/actual/user/{username}")
+    public Result<UserActualRespDTO> getActualUserByUsername(@PathVariable("username") String username){
+        log.info("查询用户信息，用户名：{}",username);
+        return Results.success(BeanUtil.toBean(userService.getUserByUsername(username),UserActualRespDTO.class));
+    }
 }
