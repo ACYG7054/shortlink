@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -26,8 +27,6 @@ public class UserController {
 
     /**
      * 根据用户名查询信息
-     * @param username
-     * @return
      */
     @GetMapping("/api/short-link/admin/v1/user/{username}")
     public Result<UserRespDTO> getUserByUsername(@PathVariable("username") String username){
@@ -42,12 +41,18 @@ public class UserController {
 
     /**
      * 根据用户名查询无脱敏信息
-     * @param username
-     * @return
      */
     @GetMapping("/api/short-link/admin/v1/actual/user/{username}")
     public Result<UserActualRespDTO> getActualUserByUsername(@PathVariable("username") String username){
         log.info("查询用户信息，用户名：{}",username);
         return Results.success(BeanUtil.toBean(userService.getUserByUsername(username),UserActualRespDTO.class));
+    }
+
+    /**
+     * 查找用户名是否存在
+     */
+    @GetMapping("/api/short-link/admin/v1/user/has-username")
+    public Result<Boolean> findByUsername(@RequestParam("username")String username){
+        return Results.success(userService.findByUsername(username));
     }
 }

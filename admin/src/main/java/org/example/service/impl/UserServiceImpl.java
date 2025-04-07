@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
+
+    /**
+     * 根据用户名查询用户信息
+     */
     @Override
     public UserRespDTO getUserByUsername(String username) {
         LambdaQueryWrapper<UserDO> lambdaQueryWrapper = Wrappers.lambdaQuery(UserDO.class);
@@ -30,4 +34,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         BeanUtils.copyProperties(userDO, result);
         return result;
     }
+
+    /**
+     * 判断用户名是否存在
+     */
+    @Override
+    public boolean findByUsername(String username) {
+        LambdaQueryWrapper<UserDO> lq = Wrappers.lambdaQuery(UserDO.class);
+        lq.eq(UserDO::getUsername,username);
+        UserDO userDO = baseMapper.selectOne(lq);
+        return userDO==null;
+    }
+
 }

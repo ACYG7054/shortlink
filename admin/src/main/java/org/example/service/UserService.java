@@ -6,4 +6,5 @@ import org.example.dto.resp.UserRespDTO;
 
 public interface UserService extends IService<UserDO> {
     UserRespDTO getUserByUsername(String userName);
+    boolean findByUsername(String username);
 }
