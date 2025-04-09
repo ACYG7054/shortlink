@@ -5,7 +5,7 @@ import lombok.Data;
 import org.example.common.database.BaseDO;
 
 @Data
-@TableName("t_user_0")
+@TableName("t_user")
 public class UserDO extends BaseDO {
 
     /**
