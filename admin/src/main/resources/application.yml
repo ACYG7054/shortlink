@@ -2,6 +2,7 @@ server:
   port: 8002
 
 spring:
+  #MySQL参数
   datasource:
     username: root
     password: 123456
@@ -13,6 +14,12 @@ spring:
       idle-timeout: 300000
       maximum-pool-size: 5
       minimum-idle: 5
+  #Redis参数
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
 # 设置MyBatis的日志实现为SLF4J
 mybatis:
   configuration:
@@ -22,3 +29,4 @@ mybatis:
 logging:
   level:
     org.example.mapper: DEBUG
+

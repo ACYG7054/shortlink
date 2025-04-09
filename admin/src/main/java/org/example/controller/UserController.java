@@ -6,15 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.convention.result.Result;
 import org.example.common.convention.result.Results;
+import org.example.dto.req.UserRegisterReqDTO;
 import org.example.dto.resp.UserActualRespDTO;
 import org.example.dto.resp.UserRespDTO;
 import org.example.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户管理控制层
@@ -54,5 +52,14 @@ public class UserController {
     @GetMapping("/api/short-link/admin/v1/user/has-username")
     public Result<Boolean> findByUsername(@RequestParam("username")String username){
         return Results.success(userService.findByUsername(username));
+    }
+
+    /**
+     * 用户注册
+     */
+    @PostMapping("/api/short-link/admin/v1/user")
+    public Result<Void> register(@RequestBody UserRegisterReqDTO requestParam){
+        userService.register(requestParam);
+        return Results.success();
     }
 }
