@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.convention.result.Result;
 import org.example.common.convention.result.Results;
+import org.example.dto.req.UserLoginDTO;
 import org.example.dto.req.UserRegisterReqDTO;
 import org.example.dto.resp.UserActualRespDTO;
+import org.example.dto.resp.UserLoginRespDTO;
 import org.example.dto.resp.UserRespDTO;
 import org.example.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -60,6 +62,41 @@ public class UserController {
     @PostMapping("/api/short-link/admin/v1/user")
     public Result<Void> register(@RequestBody UserRegisterReqDTO requestParam){
         userService.register(requestParam);
+        return Results.success();
+    }
+
+    /**
+     * 修改用户
+     */
+    @PutMapping("/api/short-link/admin/v1/user")
+    public Result<Void> update(@RequestBody UserRegisterReqDTO requestParam){
+        userService.update(requestParam);
+        return Results.success();
+    }
+
+    /**
+     * 用户登录
+     */
+    @PostMapping("/api/short-link/admin/v1/user/login")
+    public Result<UserLoginRespDTO> login(@RequestBody UserLoginDTO requestParam){
+        return Results.success(userService.login(requestParam));
+    }
+
+    /**
+     * 检查用户是否登录
+     */
+    @GetMapping("/api/short-link/admin/v1/user/check-login")
+    public Result<Boolean> checkLogin(@RequestParam String username, @RequestParam String uuid){
+        return Results.success(userService.checkLogin(username,uuid));
+    }
+
+    /**
+     * 退出登录
+     */
+    @DeleteMapping("/api/short-link/admin/v1/user/logout")
+    public Result<Void> logout(@RequestParam String username,@RequestParam String uuid){
+        log.info("username : {} {}, uuid : {} {}",username,username.getClass(),uuid,uuid.getClass());
+        userService.logout(username,uuid);
         return Results.success();
     }
 }
