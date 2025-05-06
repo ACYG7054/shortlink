@@ -36,7 +36,7 @@ public final class Results {
     /**
      * 通过 {@link AbstractException} 构建失败响应
      */
-    public static Result<Void> failure(AbstractException abstractException) {
+    public static String failure(AbstractException abstractException) {
         String errorCode = Optional.ofNullable(abstractException.getErrorCode())
                 .orElse(BaseErrorCode.SERVICE_ERROR.code());
         String errorMessage = Optional.ofNullable(abstractException.getErrorMessage())

@@ -4,6 +4,8 @@ import org.example.common.convention.errorcode.IErrorCode;
 
 public enum UserErrorCodeEnum implements IErrorCode {
 
+    USER_TOKEN_FAILED("A000200","用户tokne校验失败"),
+
     USER_NULL("B000200", "用户记录不存在"),
 
     USER_NAME_EXIST("B000201", "用户名已存在"),
