@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
      */
     @Override
     public boolean findByUsername(String username) {
-        return userBloomFilterConfiguration.contains(username);
+        return !userBloomFilterConfiguration.contains(username);
     }
 
     /**
