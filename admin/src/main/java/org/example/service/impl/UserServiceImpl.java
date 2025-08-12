@@ -4,7 +4,6 @@ package org.example.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.common.convention.exception.ClientException;
 import org.example.common.convention.exception.ServiceException;
 import org.example.common.enums.UserErrorCodeEnum;
-import org.example.config.RBloomFilterConfiguration;
 import org.example.dao.entity.UserDO;
 import org.example.dao.mapper.UserMapper;
 import org.example.dto.req.UserLoginDTO;
@@ -31,8 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static org.example.common.constant.RedisCacheConstant.LOCK_USER_REGISTER_KEY;
 import static org.example.common.enums.UserErrorCodeEnum.*;
@@ -66,10 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
      */
     @Override
     public boolean findByUsername(String username) {
-        LambdaQueryWrapper<UserDO> lq = Wrappers.lambdaQuery(UserDO.class);
-        lq.eq(UserDO::getUsername,username);
-        UserDO userDO = baseMapper.selectOne(lq);
-        return userDO==null;
+        return userBloomFilterConfiguration.contains(username);
     }
 
     /**

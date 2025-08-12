@@ -12,8 +12,6 @@ import org.example.dto.resp.UserActualRespDTO;
 import org.example.dto.resp.UserLoginRespDTO;
 import org.example.dto.resp.UserRespDTO;
 import org.example.service.UserService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
     private final UserService userService;
-
     /**
      * 根据用户名查询信息
      */
