@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,6 +12,7 @@ import org.example.dao.entity.ShortLinkDO;
 import org.example.dao.mapper.ShortLinkMapper;
 import org.example.dto.req.ShortLinkCreateReqDTO;
 import org.example.dto.resp.ShortLinkCreateRespDTO;
+import org.example.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import org.example.dto.resp.ShortLinkPageRespDTO;
 import org.example.service.ShortLinkService;
 import org.example.toolkit.HashUtil;
@@ -18,6 +20,8 @@ import org.redisson.api.RBloomFilter;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.constructor.DuplicateKeyException;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -95,5 +99,21 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             customGenerateCount++;
         }
         return shorUri;
+    }
+
+    /**
+     * 批量查询短链接分组下的短链接数量
+     */
+    @Override
+    public List<ShortLinkGroupCountQueryRespDTO> listGroupShortLinkCount(List<String> requestParam) {
+        QueryWrapper<ShortLinkDO> queryWrapper = Wrappers.query(new ShortLinkDO())
+                .select("gid as gid, count(*) as shortLinkCount")
+                .in("gid", requestParam)
+                .eq("enable_status", 0)
+                .eq("del_flag", 0)
+                .eq("del_time", 0L)
+                .groupBy("gid");
+        List<Map<String, Object>> shortLinkDOList = baseMapper.selectMaps(queryWrapper);
+        return BeanUtil.copyToList(shortLinkDOList, ShortLinkGroupCountQueryRespDTO.class);
     }
 }
