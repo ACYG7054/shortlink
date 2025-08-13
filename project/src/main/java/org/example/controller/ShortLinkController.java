@@ -7,9 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.common.convention.result.Result;
 import org.example.common.convention.result.Results;
 import org.example.dto.req.ShortLinkCreateReqDTO;
+import org.example.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import org.example.dto.resp.ShortLinkPageRespDTO;
 import org.example.service.ShortLinkService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 短链接管理控制层
@@ -34,5 +37,13 @@ public class ShortLinkController {
     @GetMapping("/api/short-link/v1/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(@RequestParam String gid) {
         return Results.success(shortLinkService.pageShortLink(gid));
+    }
+
+    /**
+     * 查询短链接分组内数量
+     */
+    @GetMapping("/api/short-link/v1/count")
+    public Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam("requestParam") List<String> requestParam) {
+        return Results.success(shortLinkService.listGroupShortLinkCount(requestParam));
     }
 }

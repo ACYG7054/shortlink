@@ -17,6 +17,7 @@ import org.example.dto.req.UserLoginDTO;
 import org.example.dto.req.UserRegisterReqDTO;
 import org.example.dto.resp.UserLoginRespDTO;
 import org.example.dto.resp.UserRespDTO;
+import org.example.service.GroupService;
 import org.example.service.UserService;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
@@ -39,6 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private final RedissonClient redissonClient;
     private final RBloomFilter<String> userBloomFilterConfiguration;
     private final UserMapper userMapper;
+    private final GroupService groupService;
     private final StringRedisTemplate redisTemplate;
     /**
      * 根据用户名查询用户信息
@@ -88,13 +90,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
             }
             //将数据加入到布隆过滤器当中
             userBloomFilterConfiguration.add(requestParam.getUsername());
+            //添加默认分组
+            groupService.saveGroup("默认分组");
         }catch(DuplicateKeyException ex){
             //向数据库插入数据时，违反了唯一索引约束
             throw new ClientException(USER_EXIST);
         }finally{
             lock.unlock();
         }
-
     }
 
     /**
