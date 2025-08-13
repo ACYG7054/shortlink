@@ -49,7 +49,7 @@ public class UserTransmitFilter implements Filter {
             String token = httpServletRequest.getHeader("token");
             //判断username和token是否为空
             if(!StrUtil.isAllNotBlank(username,token)){
-                returnJson((HttpServletResponse)servletResponse, Results.failure(new ClientException(USER_TOKEN_FAILED)));
+                returnJson((HttpServletResponse)servletResponse, JSON.toJSONString(Results.failure(new ClientException(USER_TOKEN_FAILED))));
                 return;
             }
             //捕捉Redis抛出的异常
@@ -57,10 +57,10 @@ public class UserTransmitFilter implements Filter {
             try{
                 userInfoJsonStr=stringRedisTemplate.opsForHash().get("login_"+username,token);
                 if(userInfoJsonStr==null){
-                    returnJson((HttpServletResponse)servletResponse, Results.failure(new ClientException(USER_TOKEN_FAILED)));
+                    returnJson((HttpServletResponse)servletResponse, JSON.toJSONString(Results.failure(new ClientException(USER_TOKEN_FAILED))));
                     return;                }
             }catch(Exception e){
-                returnJson((HttpServletResponse)servletResponse, Results.failure(new ClientException(USER_TOKEN_FAILED)));
+                returnJson((HttpServletResponse)servletResponse, JSON.toJSONString(Results.failure(new ClientException(USER_TOKEN_FAILED))));
                 return;            }
             if(userInfoJsonStr!=null){
                 UserInfoDTO userInfoDTO= JSON.parseObject(userInfoJsonStr.toString(),UserInfoDTO.class);
