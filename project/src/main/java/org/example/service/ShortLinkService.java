@@ -11,6 +11,7 @@ import org.example.dto.resp.ShortLinkCreateRespDTO;
 import org.example.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import org.example.dto.resp.ShortLinkPageRespDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
     IPage<ShortLinkPageRespDTO> pageShortLink(String gid);
     List<ShortLinkGroupCountQueryRespDTO> listGroupShortLinkCount(List<String> requestParam);
     void updateShortLink(ShortLinkUpdateReqDTO requestParam);
-    void restoreUrl(String shortUri, ServletRequest request, ServletResponse response);
+    void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) throws IOException;
 
 
 }
