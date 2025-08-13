@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.common.convention.result.Result;
 import org.example.common.convention.result.Results;
 import org.example.dto.req.ShortLinkCreateReqDTO;
+import org.example.dto.req.ShortLinkUpdateReqDTO;
 import org.example.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import org.example.dto.resp.ShortLinkPageRespDTO;
 import org.example.service.ShortLinkService;
@@ -45,5 +46,14 @@ public class ShortLinkController {
     @GetMapping("/api/short-link/v1/count")
     public Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam("requestParam") List<String> requestParam) {
         return Results.success(shortLinkService.listGroupShortLinkCount(requestParam));
+    }
+
+    /**
+     * 修改短链接
+     */
+    @PostMapping("/api/short-link/v1/update")
+    public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam) {
+        shortLinkService.updateShortLink(requestParam);
+        return Results.success();
     }
 }
