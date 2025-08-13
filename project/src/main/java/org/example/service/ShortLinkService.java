@@ -2,6 +2,8 @@ package org.example.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import org.example.dao.entity.ShortLinkDO;
 import org.example.dto.req.ShortLinkCreateReqDTO;
 import org.example.dto.req.ShortLinkUpdateReqDTO;
@@ -19,5 +21,7 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
     IPage<ShortLinkPageRespDTO> pageShortLink(String gid);
     List<ShortLinkGroupCountQueryRespDTO> listGroupShortLinkCount(List<String> requestParam);
     void updateShortLink(ShortLinkUpdateReqDTO requestParam);
+    void restoreUrl(String shortUri, ServletRequest request, ServletResponse response);
+
 
 }

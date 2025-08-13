@@ -7,11 +7,15 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.common.convention.exception.ClientException;
 import org.example.common.convention.exception.ServiceException;
 import org.example.common.enums.VailDateTypeEnum;
 import org.example.dao.entity.ShortLinkDO;
+import org.example.dao.entity.ShortLinkGotoDO;
+import org.example.dao.mapper.ShortLinkGotoMapper;
 import org.example.dao.mapper.ShortLinkMapper;
 import org.example.dto.req.ShortLinkCreateReqDTO;
 import org.example.dto.req.ShortLinkUpdateReqDTO;
@@ -36,6 +40,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLinkDO> implements ShortLinkService {
     private final RBloomFilter<String> shortUriCreateCachePenetrationBloomFilter;
+    private final ShortLinkGotoMapper shortLinkGotoMapper;
+
     @Override
     public ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam) {
         //生成短链接
@@ -44,8 +50,14 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         ShortLinkDO shortLinkDO= BeanUtil.toBean(requestParam, ShortLinkDO.class);
         shortLinkDO.setShortUri(shortLinkSuffix);
         shortLinkDO.setFullShortUrl(requestParam.getDomain()+"/"+shortLinkSuffix);
+
+        ShortLinkGotoDO linkGotoDO = ShortLinkGotoDO.builder()
+                .fullShortUrl(requestParam.getDomain()+"/"+shortLinkSuffix)
+                .gid(requestParam.getGid())
+                .build();
         try{
             baseMapper.insert(shortLinkDO);
+            shortLinkGotoMapper.insert(linkGotoDO);
         }catch(DuplicateKeyException ex){
             //判断是否存在于数据库，不存在则直接新增
             if(shortUriCreateCachePenetrationBloomFilter.contains(shortLinkDO.getFullShortUrl())){
@@ -164,5 +176,10 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             baseMapper.delete(queryWrapper);
             baseMapper.insert(shortLinkDO);
         }
+    }
+
+    @Override
+    public void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) {
+        //TODO 跳转
     }
 }
