@@ -17,7 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class ShortLinkPageRespDTO {
     private Long id;
-    private String domin;
+    private String domain;
     private String shortUri;
     private String fullShortUrl;
     private String originUrl;
