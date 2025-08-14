@@ -26,6 +26,7 @@ import org.example.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import org.example.dto.resp.ShortLinkPageRespDTO;
 import org.example.service.ShortLinkService;
 import org.example.toolkit.HashUtil;
+import org.example.toolkit.LinkUtil;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -55,12 +56,13 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         //生成短链接
         String shortLinkSuffix = generateShortLink(requestParam);
         //为shortLinkDO赋值
+        String fullShortUrl=requestParam.getDomain()+"/"+shortLinkSuffix;
         ShortLinkDO shortLinkDO= BeanUtil.toBean(requestParam, ShortLinkDO.class);
         shortLinkDO.setShortUri(shortLinkSuffix);
-        shortLinkDO.setFullShortUrl(requestParam.getDomain()+"/"+shortLinkSuffix);
+        shortLinkDO.setFullShortUrl(fullShortUrl);
 
         ShortLinkGotoDO linkGotoDO = ShortLinkGotoDO.builder()
-                .fullShortUrl(requestParam.getDomain()+"/"+shortLinkSuffix)
+                .fullShortUrl(fullShortUrl)
                 .gid(requestParam.getGid())
                 .build();
         try{
@@ -73,7 +75,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             }
             throw new ServiceException("短链接生成失败，请稍后再试");
         }
-
+        //缓存预热
+        stringRedisTemplate.opsForValue().set(
+                String.format(GOTO_SHORT_LINK_KEY, fullShortUrl),
+                requestParam.getOriginUrl(),
+                LinkUtil.getLinkCacheValidTime(requestParam.getValidDate()), TimeUnit.MILLISECONDS
+        );
         shortUriCreateCachePenetrationBloomFilter.add(shortLinkDO.getFullShortUrl());
         return ShortLinkCreateRespDTO.builder()
                 .fullShortUrl(shortLinkDO.getFullShortUrl())
