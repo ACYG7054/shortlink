@@ -18,9 +18,8 @@
 
 短链接广泛应用于各种营销活动和日常场景中。企业通过短链接可以识别用户行为、监控点击率等关键指标。
 
-
 <div align="left">
-  <img src="D:\my_project\shortlink\project\src\main\resources\static\images\a9380702586354144187667aa9afe960.jpg" width="30%" alt="短链接应用场景示例">
+  <img src="https://raw.githubusercontent.com/ACYG7054/shortlink/b361c5efe5f7d3e28b85c909822caf432e32bb59/project/src/main/resources/static/images/a9380702586354144187667aa9afe960.jpg" width="30%" alt="短链接应用场景示例">
 </div>
 
 ### 核心优势
